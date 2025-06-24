@@ -2,11 +2,12 @@ import express from 'express'
 import multer from 'multer'
 import { LocalStorageProvider } from './provides/LocalStorageProvider.js';
 import fs from 'fs'
+import cron from 'node-cron';
 
 // geting env port and fallback 
 const PORT = process.env.PORT || 3000;
 const FOLDER = process.env.FOLDER || "./static/"; // FOLDER value must contain an trailing slash /
-
+const DAYS_TO_KEEP = parseInt(process.env.DAYS_TO_KEEP || "7");
 
 const app = express(); // web server 
 const upload = multer(); // for uploading files
@@ -46,6 +47,7 @@ app.get("/files/:publicKey", async(req,res) =>{
         res.status(404).json({
             error: "File not found"
         })
+        return
     }
     res.setHeader("Content-Type", mimeType);
     res.send(buff);
@@ -60,11 +62,14 @@ app.delete("/files/:privateKey", async(req,res) => {
             res.json({success:false, message:"Delete failed. File not found."})
         }
     }catch(e){
-        console.log(e instanceof PrismaClientKnownRequestError)
         res.send({
             error: e.toString()
         })
     }
+})
+
+cron.schedule("* * * * *",()=>{
+    storage.cleanUpInactive(DAYS_TO_KEEP);
 })
 
 // starting the server

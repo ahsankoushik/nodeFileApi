@@ -74,26 +74,61 @@ export class LocalStorageProvider extends StorageProvider {
     /**
         * Delete the file from storage and database
         * @param {string} privateKey - privateKey ulid for deleting file. So that no one can delete with publicKey
-        * 
+        * @returns {boolean} status of file deletation false - means not found
         */
 
     async delete(privateKey) {
+        let fileData;
         try {
-            const fileData = await prisma.file.delete({
+            fileData = await prisma.file.delete({
                 where: {
                     privateKey
                 }
             })
-        }catch(e){
+        } catch (e) {       // incase of non existing data
             return false
         }
+        // delete file
         const filePath = path.join(this.folder, fileData.publicKey + fileData.extention);
         await fs.unlink(filePath)
         return true
     }
 
-    async cleanUpInactive() {
-        throw Error("cleanUpInactive not implemented");
+    /** 
+        * Clean up inactive files after a time period
+        * @param { number } days - after how many days the file will be deleted
+        */
+    async cleanUpInactive(days) {
+        const deltaTime = new Date();
+        deltaTime.setDate(deltaTime.getDate()-days);
+        // getting the entries to delete
+        const inactives = await prisma.file.findMany({
+            where: {
+                lastAccess: {
+                    lt: deltaTime
+                }
+            }
+        })
+        for(let i =0; i < inactives.length; i++){
+            const fileData = inactives[i];
+            console.log(fileData);
+            const filePath = path.join( this.folder, fileData.publicKey + fileData.extention); 
+            console.log(filePath)
+            await fs.unlink(filePath)
+        }
+        try {
+            await prisma.file.deleteMany({
+                where: {
+                    lastAccess: {
+                        lt: deltaTime
+                    }
+                }
+            })
+            console.log(inactives);
+        } catch (e) {
+            console.log(e);
+
+        }
     }
 
 

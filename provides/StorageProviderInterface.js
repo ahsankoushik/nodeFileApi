@@ -24,7 +24,7 @@ export class StorageProvider {
         throw Error("delete not implemented");
     }
 
-    async cleanUpInactive(prisma) {
+    async cleanUpInactive(days) {
         throw Error("cleanUpInactive not implemented");
     }
 
