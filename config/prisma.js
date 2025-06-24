@@ -1,9 +1,6 @@
 // prisma singleton implementation 
 import { PrismaClient } from '@prisma/client';
 
-/**
- * @type {typeof globalThis & { prisma?: PrismaClient }}
- */
 const globalForPrisma = globalThis;
 
 const prisma = globalForPrisma.prisma || new PrismaClient();

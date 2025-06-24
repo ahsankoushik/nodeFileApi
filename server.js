@@ -1,13 +1,16 @@
 import express from 'express'
 import multer from 'multer'
 import { LocalStorageProvider } from './providers/LocalStorageProvider.js';
+import { traficLimit } from './middlewares/traficLimit.js';
 import fs from 'fs'
 import cron from 'node-cron';
+import redis from './config/redis.js';
 
 // geting env port and fallback 
 const PORT = process.env.PORT || 3000;
 const FOLDER = process.env.FOLDER || "./static/"; // FOLDER value must contain an trailing slash /
 const DAYS_TO_KEEP = parseInt(process.env.DAYS_TO_KEEP || "7");
+const DOWNLOAD_LIMIT = parseInt(process.env.DOWNLOAD_LIMIT || 1) * 1024 * 1024;
 
 export const app = express(); // web server  // exporting this for integration testing
 const upload = multer(); // for uploading files
@@ -20,7 +23,11 @@ if (!fs.existsSync(FOLDER)) {
 
 const storage = new LocalStorageProvider(FOLDER);
 
+// middlewares
+app.use("/files", traficLimit);
+
 app.post("/files", upload.single("file"), async (req, res) => {
+
     const contentType = req.get("Content-Type");
     if (contentType && contentType.includes("multipart/form-data")) {
         try {
@@ -44,11 +51,19 @@ app.post("/files", upload.single("file"), async (req, res) => {
 app.get("/files/:publicKey", async(req,res) =>{
     const {buff, mimeType} = await storage.download(req.params.publicKey);
     if(buff === null && mimeType === null){
-        res.status(404).json({
+        return res.status(404).json({
             error: "File not found"
         })
-        return
     }
+    const data = req.__traficData;
+    console.log(data.download, buff.length);
+    data.download += buff.length;
+    console.log(data.download, buff.length);
+    if(data.download >= DOWNLOAD_LIMIT){
+        return res.status(429).json({error:"Daily Download limit reached its max."});
+    }
+    console.log(data.download, buff.length);
+    await redis.set(req.__traficKey, JSON.stringify(data));
     res.setHeader("Content-Type", mimeType);
     res.send(buff);
 })
