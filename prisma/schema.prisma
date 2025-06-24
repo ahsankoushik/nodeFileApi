@@ -1,0 +1,13 @@
+// This file defines the Prisma schema for SQLite
+// Save as prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+
