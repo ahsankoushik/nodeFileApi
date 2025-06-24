@@ -97,10 +97,11 @@ export class LocalStorageProvider extends StorageProvider {
     /** 
         * Clean up inactive files after a time period
         * @param { number } days - after how many days the file will be deleted
+        * @returns { Promise<{count:number}> } count of deleted files
         */
     async cleanUpInactive(days) {
         const deltaTime = new Date();
-        deltaTime.setDate(deltaTime.getDate()-days);
+        deltaTime.setDate(deltaTime.getDate() - days);
         // getting the entries to delete
         const inactives = await prisma.file.findMany({
             where: {
@@ -109,12 +110,17 @@ export class LocalStorageProvider extends StorageProvider {
                 }
             }
         })
-        for(let i =0; i < inactives.length; i++){
+        for (let i = 0; i < inactives.length; i++) {
             const fileData = inactives[i];
-            console.log(fileData);
-            const filePath = path.join( this.folder, fileData.publicKey + fileData.extention); 
-            console.log(filePath)
-            await fs.unlink(filePath)
+            const filePath = path.join(this.folder, fileData.publicKey + fileData.extention);
+            try {
+
+                await fs.unlink(filePath)
+            }catch(e){
+                // this will most unlikely case 
+                // but if not it should not be issue as this will be deleted
+                // console.error(e);
+            }
         }
         try {
             const deleteCount = await prisma.file.deleteMany({
@@ -126,7 +132,7 @@ export class LocalStorageProvider extends StorageProvider {
             })
             return deleteCount
         } catch (e) {
-            console.error(e); 
+            console.error(e);
         }
     }
 

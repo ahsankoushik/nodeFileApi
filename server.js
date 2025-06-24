@@ -1,6 +1,6 @@
 import express from 'express'
 import multer from 'multer'
-import { LocalStorageProvider } from './provides/LocalStorageProvider.js';
+import { LocalStorageProvider } from './providers/LocalStorageProvider.js';
 import fs from 'fs'
 import cron from 'node-cron';
 
