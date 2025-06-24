@@ -2,9 +2,10 @@
   "name": "nodefileapi",
   "version": "1.0.0",
   "description": "File sharing api implementation in node js ",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "vitest",
+    "test": "vitest run tests/integration/",
+    "test:unit": "vitest run tests/unit",
     "start": "node server.js",
     "dev": "nodemon server.js"
   },

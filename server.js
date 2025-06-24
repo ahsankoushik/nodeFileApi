@@ -56,13 +56,10 @@ app.get("/files/:publicKey", async(req,res) =>{
         })
     }
     const data = req.__traficData;
-    console.log(data.download, buff.length);
     data.download += buff.length;
-    console.log(data.download, buff.length);
     if(data.download >= DOWNLOAD_LIMIT){
         return res.status(429).json({error:"Daily Download limit reached its max."});
     }
-    console.log(data.download, buff.length);
     await redis.set(req.__traficKey, JSON.stringify(data));
     res.setHeader("Content-Type", mimeType);
     res.send(buff);
