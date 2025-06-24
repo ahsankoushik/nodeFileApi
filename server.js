@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 const FOLDER = process.env.FOLDER || "./static/"; // FOLDER value must contain an trailing slash /
 const DAYS_TO_KEEP = parseInt(process.env.DAYS_TO_KEEP || "7");
 
-const app = express(); // web server 
+export const app = express(); // web server  // exporting this for integration testing
 const upload = multer(); // for uploading files
 
 

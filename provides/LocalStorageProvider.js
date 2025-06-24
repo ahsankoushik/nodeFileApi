@@ -74,7 +74,7 @@ export class LocalStorageProvider extends StorageProvider {
     /**
         * Delete the file from storage and database
         * @param {string} privateKey - privateKey ulid for deleting file. So that no one can delete with publicKey
-        * @returns {boolean} status of file deletation false - means not found
+        * @returns {Promise<boolean>} status of file deletation false - means not found
         */
 
     async delete(privateKey) {
@@ -117,17 +117,16 @@ export class LocalStorageProvider extends StorageProvider {
             await fs.unlink(filePath)
         }
         try {
-            await prisma.file.deleteMany({
+            const deleteCount = await prisma.file.deleteMany({
                 where: {
                     lastAccess: {
                         lt: deltaTime
                     }
                 }
             })
-            console.log(inactives);
+            return deleteCount
         } catch (e) {
-            console.log(e);
-
+            console.error(e); 
         }
     }
 
