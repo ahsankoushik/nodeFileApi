@@ -51,6 +51,22 @@ app.get("/files/:publicKey", async(req,res) =>{
     res.send(buff);
 })
 
+app.delete("/files/:privateKey", async(req,res) => {
+    try{
+        const out = await storage.delete(req.params.privateKey);
+        if(out){
+            res.json({success:true, message:"successfully deleted."})
+        }else{
+            res.json({success:false, message:"Delete failed. File not found."})
+        }
+    }catch(e){
+        console.log(e instanceof PrismaClientKnownRequestError)
+        res.send({
+            error: e.toString()
+        })
+    }
+})
+
 // starting the server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

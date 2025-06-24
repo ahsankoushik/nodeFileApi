@@ -13,11 +13,13 @@ export class LocalStorageProvider extends StorageProvider {
         * @returns {Promise<{ publicKey: string, privateKey: string}>} Public and private key pair
         */
     async upload(buff, filename) {
+        // ulid for lexical sort
         const privateKey = ulid();
         const publicKey = ulid();
         const extname = path.extname(filename);
-        const filenameSave = publicKey + extname;
+        const filenameSave = publicKey + extname; // renaming with ulid to overcome name confict and save space on db
         const savePath = path.join(this.folder, filenameSave);
+        // write to disk and save to db
         await fs.writeFile(savePath, buff);
         await prisma.file.create({
             data: {
@@ -43,6 +45,7 @@ export class LocalStorageProvider extends StorageProvider {
                 publicKey
             }
         })
+        // checking if the file's entry exists or not
         if (fileData === null) {
             return {
                 buff: null,
@@ -50,22 +53,43 @@ export class LocalStorageProvider extends StorageProvider {
             }
         }
         const filePath = path.join(this.folder, fileData.publicKey + fileData.extention);
+        // read file and mimetype
+        // using buffer so that other cloud provider integration gets easier 
         const buff = await fs.readFile(filePath);
         const mimeType = mime.getType(filePath);
-        const rest = await prisma.file.update({
-            where: { 
-                id: fileData.id 
+
+        // update last access time
+        await prisma.file.update({
+            where: {
+                id: fileData.id
             },
             data: {
-                lastAccess : new Date() 
+                lastAccess: new Date()
             }
         })
-        console.log(rest)
+
         return { buff, mimeType }
     }
 
-    async delete() {
-        throw Error("delete not implemented");
+    /**
+        * Delete the file from storage and database
+        * @param {string} privateKey - privateKey ulid for deleting file. So that no one can delete with publicKey
+        * 
+        */
+
+    async delete(privateKey) {
+        try {
+            const fileData = await prisma.file.delete({
+                where: {
+                    privateKey
+                }
+            })
+        }catch(e){
+            return false
+        }
+        const filePath = path.join(this.folder, fileData.publicKey + fileData.extention);
+        await fs.unlink(filePath)
+        return true
     }
 
     async cleanUpInactive() {
