@@ -11,7 +11,7 @@ File and media management app using nodejs
 
 ### After cloning the repo
 
-Fist thing we need is redis
+First thing we need is redis
 ```bash
 # for docker run inside the project
 docker compose up -d
