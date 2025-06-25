@@ -1,42 +1,50 @@
 
 import { LocalStorageProvider } from "../../providers/LocalStorageProvider.js";
 import path from "path";
-import fs from "fs/promises";
+import fs from "fs";
+import fsp from "fs/promises";
 import { assert, afterAll, beforeAll, expect, test } from "vitest"
 
 // dummy dir for test
-const testDir = path.resolve("./test-storage");
+const testDir = process.env.FOLDER;
+console.log(testDir);
 
-beforeAll(async () => {
-    await fs.mkdir(testDir, { recursive: true });
-});
-
+// beforeAll(async () => {
+//     await fs.mkdir(testDir, { recursive: true });
+// });
+//
 afterAll(async () => {
-    await fs.rm(testDir, { recursive: true, force: true });
+    await fsp.rm(testDir, { recursive: true, force: true });
 });
 
-const storage = new LocalStorageProvider(testDir);
+const storage = new LocalStorageProvider();
 
 test("upload stores file and returns keys", async () => {
+    const filename = "test.txt";
     const buffer = Buffer.from("unit test file");
-    const result = await storage.upload(buffer, "test.txt");
+    await storage.upload(buffer, filename);
 
-    expect(result).toHaveProperty("publicKey");
-    expect(result).toHaveProperty("privateKey");
+    const exists = fs.existsSync(path.join(testDir,filename));
+    assert(exists, "File must exist");
+
 });
 
 test("download returns file buffer and mimetype", async () => {
-    const { publicKey } = await storage.upload(Buffer.from("abc"), "note.txt");
-    const { buff, mimeType } = await storage.download(publicKey);
+    const filename = "note.txt";
+    await storage.upload(Buffer.from("abc"), filename);
+    const { buff, mimeType } = await storage.download(filename);
 
     expect(buff.toString()).toBe("abc");
     expect(mimeType).toBe("text/plain");
 });
 
 test("delete removes file by privateKey", async () => {
-    const { privateKey } = await storage.upload(Buffer.from("delete"), "del.txt");
-    const result = await storage.delete(privateKey);
-    expect(result).toBe(true);
+    const filename = "del.txt";
+    await storage.upload(Buffer.from("delete"), filename);
+    await storage.delete(filename);
+    const exists = fs.existsSync(path.join(testDir,filename));
+    assert(!exists, "File must not exist");
+
 });
 
 
