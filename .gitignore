@@ -5,3 +5,4 @@ static
 *.sql
 *.db
 api_keys
+prisma/migrations/
