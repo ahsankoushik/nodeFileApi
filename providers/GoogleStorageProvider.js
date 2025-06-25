@@ -1,15 +1,16 @@
 import { StorageProvider } from "./StorageProviderInterface.js";
 import { Storage } from '@google-cloud/storage';
+import { CONFIG, BUCKET } from "../config/env.js"
 
 export class GoogleStorageProvider extends StorageProvider {
     constructor(){
         super();
         console.log("using google storage provider");
-        this.config = process.env.CONFIG || "./api_keys/service_account.json";
+        this.config = CONFIG;
         const storage = new Storage({
             keyFilename:this.config
         })
-        this.bucketName = process.env.BUCKET || "node_file_api";
+        this.bucketName = BUCKET;
         this.bucket = storage.bucket(this.bucketName);
     }
     /** 

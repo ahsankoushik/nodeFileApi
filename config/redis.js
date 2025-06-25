@@ -1,25 +1,25 @@
 
 // singleton for redis
-import { createClient } from 'redis';
-
+import { createClient } from "redis";
+import { REDIS_URL, NODE_ENV } from "./env.js"
 const globalForRedis = globalThis;
 
 let redis;
 
 if (!globalForRedis.redis) {
-  redis = createClient({
-    url: process.env.REDIS_URL || 'redis://localhost:6379',
-  });
+    redis = createClient({
+        url: REDIS_URL,
+    });
 
-  redis.on('error', (err) => console.error('Redis Client Error', err));
+    redis.on('error', (err) => console.error('Redis Client Error', err));
 
-  await redis.connect(); 
-
-  if (process.env.NODE_ENV !== 'production') {
-    globalForRedis.redis = redis;
-  }
+    await redis.connect();
+    // to stop initialztio when using hot realoding
+    if (NODE_ENV !== 'production') {
+        globalForRedis.redis = redis;
+    }
 } else {
-  redis = globalForRedis.redis;
+    redis = globalForRedis.redis;
 }
 
 export default redis;

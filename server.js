@@ -2,7 +2,7 @@ import express from 'express'
 import multer from 'multer'
 import { LocalStorageProvider } from './providers/LocalStorageProvider.js';
 import { GoogleStorageProvider } from './providers/GoogleStorageProvider.js';
-import { traficLimit, DOWNLOAD_LIMIT } from './middlewares/traficLimit.js';
+import { traficLimit } from './middlewares/traficLimit.js';
 import { cleanUpInactive } from './utils/cleanUp.js'
 import { ulid } from 'ulid';
 import path from 'path';
@@ -10,15 +10,14 @@ import cron from 'node-cron';
 import redis from './config/redis.js';
 import prisma from "./config/prisma.js";
 
-// geting env port and fallback 
-const PORT = process.env.PORT || 3000;
-const DAYS_TO_KEEP = parseInt(process.env.DAYS_TO_KEEP || "7");
+// geting env and fallback 
+import { PORT, DAYS_TO_KEEP, PROVIDER, DOWNLOAD_LIMIT } from "./config/env.js";
+
 
 export const app = express(); // web server  // exporting this for integration testing
 const upload = multer(); // for uploading files
 
 let storage;
-const PROVIDER = process.env.PROVIDER || "local";
 if( PROVIDER === "google" ){
     storage = new GoogleStorageProvider();
 }else{

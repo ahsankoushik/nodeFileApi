@@ -1,4 +1,5 @@
 import { StorageProvider } from "./StorageProviderInterface.js";
+import { FOLDER } from "../config/env.js"
 import fsp from 'fs/promises';
 import path from 'path';
 import mime from 'mime';
@@ -8,7 +9,7 @@ export class LocalStorageProvider extends StorageProvider {
     constructor() {
         super();
         console.log("using local storage provider");
-        this.folder = process.env.FOLDER || "./static/"; // folder value must contain an trailing slash /
+        this.folder = FOLDER; // folder value must contain an trailing slash /
 
         // creating file if does not exists
         if (!fs.existsSync(this.folder)) {
