@@ -21,7 +21,7 @@ Now we need the npm packages
 npm install
 ```
 
-You can use any database supported by prisma so you need to configure that.
+You can use any database supported by prisma so you need to configure that. And change it in [schema.prisma](./prisma/schema.prisma).
 I am using sqlite3 for simplicity.
 
 After selecting the database we need to migrate the database
@@ -48,7 +48,7 @@ npm test
 # Unit test
 npm run test:unit
 
-# for all the test
+# for all the tests
 npx vitest
 ```
 
@@ -68,5 +68,25 @@ npx vitest
 | NODE_ENV | dev | `dev` or `production` | Sets the app mode |
 
 
+## For Google Cloud Storage 
+To use GCS you will need a service accout key. You can create one at [Google Cloud Console](https://console.cloud.google.com/) in the IAM & Admin section.
+Service accout is an account for your app to use a service of google.
+You will also need to configure permissions for this service account. e.g.: The role Storage Object User will do fine for this project as it grants CRUD operation on GCS.
 
+The service account file is json file and contains:
+```json
+{
+  "type": "",
+  "project_id": "",
+  "private_key_id": "",
+  "private_key": "",
+  "client_email": "",
+  "client_id": "",
+  "auth_uri": "",
+  "token_uri": "",
+  "auth_provider_x509_cert_url": "",
+  "client_x509_cert_url": "",
+  "universe_domain": ""
+}
+```
 
