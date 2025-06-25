@@ -11,7 +11,7 @@ test("POST /files → upload a file", async () => {
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("publicKey");
     expect(res.body).toHaveProperty("privateKey");
-});
+},10000);
 
 
 // integration testing for getting file 

@@ -37,7 +37,7 @@ app.post("/files", upload.single("file"), async (req, res) => {
             const privateKey = ulid();
             const publicKey = ulid();
             const extname = path.extname(originalname);
-            const filenameSave = publicKey + extname; // renaming with ulid to overcome name confict and save space on db
+            const filenameSave = publicKey + extname; // renaming with ulid to overcome name confict 
             await storage.upload(buffer, filenameSave);
             await prisma.file.create({
                 data: {
