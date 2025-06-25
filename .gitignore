@@ -4,3 +4,4 @@ package-lock.json
 static
 *.sql
 *.db
+api_keys
