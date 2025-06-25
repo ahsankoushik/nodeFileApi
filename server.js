@@ -110,7 +110,7 @@ app.delete("/files/:privateKey", async (req, res) => {
             }
         })
     } catch (e) {       // incase of non existing data
-        res.json({ success: false, message: "Delete failed. File not found." })
+        return res.json({ success: false, message: "Delete failed. File not found." })
     }
     const filename = fileData.publicKey + path.extname(fileData.originalName);
     const out = await storage.delete(filename);
