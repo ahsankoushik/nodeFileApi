@@ -40,15 +40,3 @@ test("delete removes file by privateKey", async () => {
 });
 
 
-test("clean up inactive file and returns count", async () => {
-    const buffer = Buffer.from("unit test file");
-    await storage.upload(buffer, "test.txt");
-    // using 0 so that delete all the files
-    const result = await storage.cleanUpInactive(0);
-
-    expect(result).toHaveProperty("count");
-    // file uploaded 4 deleted 1 so 3 should be deleted
-    assert(result.count >= 3, "file delete cound should be 3");
-});
-
-

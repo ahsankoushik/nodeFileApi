@@ -1,8 +1,10 @@
 import redis from "../config/redis.js";
 
+
+// TODO :: changed mb to gb change it later
 // upload limit in mb bytes
-const UPLOAD_LIMIT = parseInt(process.env.UPLOAD_LIMIT || 1) * 1024 * 1024;
-const DOWNLOAD_LIMIT = parseInt(process.env.DOWNLOAD_LIMIT || 1) * 1024 * 1024;
+export const UPLOAD_LIMIT = parseInt(process.env.UPLOAD_LIMIT || 1) * 1024 * 1024 * 1024;
+export const DOWNLOAD_LIMIT = parseInt(process.env.DOWNLOAD_LIMIT || 1) * 1024 * 1024 *1024;
 
 export async function traficLimit(req, res, next) {
     const ip = req.ip;

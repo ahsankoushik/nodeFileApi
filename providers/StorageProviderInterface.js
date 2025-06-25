@@ -12,20 +12,16 @@ export class StorageProvider {
     }
 
 
-    async upload(buff, filename ) {
+    async upload(buff, filenameSave ) {
         throw Error("upload not implemented");
     }
 
-    async download(publicKey) {
+    async download(filename) {
         throw Error("download not implemented");
     }
 
-    async delete(privateKey) {
+    async delete(filename) {
         throw Error("delete not implemented");
-    }
-
-    async cleanUpInactive(days) {
-        throw Error("cleanUpInactive not implemented");
     }
 
 }
