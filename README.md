@@ -4,7 +4,7 @@ File and media management app using nodejs
 
 ## How to run this is for dev
 
-# prerequisite
+### prerequisite
 1. Nodejs ( best if v22.16.0)
 2. Redis ( redis on docker will work fine)
 3. SQL database ( any supported by prisma)
@@ -37,6 +37,7 @@ npm start
 
 # for development 
 npm run dev 
+
 ```
 
 To run test
@@ -47,6 +48,8 @@ npm test
 # Unit test
 npm run test:unit
 
+# for all the test
+npx vitest
 ```
 
 ## There are some enviroment variable to configure this app
