@@ -1,8 +1,6 @@
 import redis from "../config/redis.js";
-import {  } from "../config/env.js";
+import { DOWNLOAD_LIMIT,UPLOAD_LIMIT } from "../config/env.js";
 
-// TODO :: changed mb to gb change it later
-// upload limit in mb bytes
 
 export async function traficLimit(req, res, next) {
     const ip = req.ip;
@@ -27,8 +25,8 @@ export async function traficLimit(req, res, next) {
             return res.status(429).json({ error: "Daily upload limit reached its max." });
         }
     }
-    await redis.set(key, JSON.stringify(data));
+    await redis.set(key, JSON.stringify(data), 'EX', 86400);
     req.__traficKey = key;
     req.__traficData = data;
     next();
-}
+};

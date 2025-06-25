@@ -94,7 +94,7 @@ app.get("/files/:publicKey", async (req, res) => {
     if (data.download >= DOWNLOAD_LIMIT) {
         return res.status(429).json({ error: "Daily Download limit reached its max." });
     }
-    await redis.set(req.__traficKey, JSON.stringify(data));
+    await redis.set(req.__traficKey, JSON.stringify(data), 'EX', 86400);
     res.setHeader('Content-Disposition', `attachment; filename="${fileData.originalName}"`);
     res.setHeader("Content-Type", mimeType);
     res.send(buff);
