@@ -24,7 +24,7 @@ test("GET /files/:publicKey → download uploaded file", async () => {
     expect(res.statusCode).toBe(200);
     expect(res.headers["content-type"]).toBe("text/plain");
     expect(res.text).toBe("download me");
-},{timeout:10000});
+},10000);
 
 // integration testing for deleteing file
 test("DELETE /files/:privateKey → deletes file", async () => {

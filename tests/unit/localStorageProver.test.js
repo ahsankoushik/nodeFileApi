@@ -4,10 +4,9 @@ import path from "path";
 import fs from "fs";
 import fsp from "fs/promises";
 import { assert, afterAll, beforeAll, expect, test } from "vitest"
-
+import { FOLDER } from "../../config/env.js"
 // dummy dir for test
-const testDir = process.env.FOLDER;
-
+const testDir = FOLDER;
 // beforeAll(async () => {
 //     await fs.mkdir(testDir, { recursive: true });
 // });
