@@ -4,6 +4,7 @@ import { Storage } from '@google-cloud/storage';
 export class GoogleStorageProvider extends StorageProvider {
     constructor(){
         super();
+        console.log("using google storage provider");
         this.config = process.env.CONFIG || "./api_keys/service_account.json";
         const storage = new Storage({
             keyFilename:this.config

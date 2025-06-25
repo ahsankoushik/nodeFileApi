@@ -7,7 +7,6 @@ import { assert, afterAll, beforeAll, expect, test } from "vitest"
 
 // dummy dir for test
 const testDir = process.env.FOLDER;
-console.log(testDir);
 
 // beforeAll(async () => {
 //     await fs.mkdir(testDir, { recursive: true });
@@ -19,7 +18,7 @@ afterAll(async () => {
 
 const storage = new LocalStorageProvider();
 
-test("upload stores file and returns keys", async () => {
+test("upload stores file ", async () => {
     const filename = "test.txt";
     const buffer = Buffer.from("unit test file");
     await storage.upload(buffer, filename);
@@ -38,7 +37,7 @@ test("download returns file buffer and mimetype", async () => {
     expect(mimeType).toBe("text/plain");
 });
 
-test("delete removes file by privateKey", async () => {
+test("delete removes file by filename", async () => {
     const filename = "del.txt";
     await storage.upload(Buffer.from("delete"), filename);
     await storage.delete(filename);

@@ -17,9 +17,13 @@ const DAYS_TO_KEEP = parseInt(process.env.DAYS_TO_KEEP || "7");
 export const app = express(); // web server  // exporting this for integration testing
 const upload = multer(); // for uploading files
 
-
-// const storage = new LocalStorageProvider();
-const storage = new GoogleStorageProvider();
+let storage;
+const PROVIDER = process.env.PROVIDER || "local";
+if( PROVIDER === "google" ){
+    storage = new GoogleStorageProvider();
+}else{
+    storage = new LocalStorageProvider();
+}
 
 // middlewares
 app.use("/files", traficLimit);

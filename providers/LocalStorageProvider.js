@@ -7,6 +7,7 @@ import fs from 'fs'
 export class LocalStorageProvider extends StorageProvider {
     constructor() {
         super();
+        console.log("using local storage provider");
         this.folder = process.env.FOLDER || "./static/"; // folder value must contain an trailing slash /
 
         // creating file if does not exists
