@@ -29,7 +29,7 @@ export class LocalStorageProvider extends StorageProvider {
     }
 
     /**
-        * Download a file using publicKey
+        * Download a file using filenme
         * @param {string} filename - which to retrive
         * @returns {Promise<{buff?:Buffer, mimeType?:string}} File with mimeType
         */
@@ -46,7 +46,6 @@ export class LocalStorageProvider extends StorageProvider {
     /**
         * Delete the file from storage and database
         * @param {string} filename - which to delete 
-        * @returns {Promise<boolean>} status of file deletation false - means not found
         */
 
     async delete(filename) {

@@ -1,6 +1,7 @@
 import express from 'express'
 import multer from 'multer'
 import { LocalStorageProvider } from './providers/LocalStorageProvider.js';
+import { GoogleStorageProvider } from './providers/GoogleStorageProvider.js';
 import { traficLimit, DOWNLOAD_LIMIT } from './middlewares/traficLimit.js';
 import { cleanUpInactive } from './utils/cleanUp.js'
 import { ulid } from 'ulid';
@@ -17,7 +18,8 @@ export const app = express(); // web server  // exporting this for integration t
 const upload = multer(); // for uploading files
 
 
-const storage = new LocalStorageProvider();
+// const storage = new LocalStorageProvider();
+const storage = new GoogleStorageProvider();
 
 // middlewares
 app.use("/files", traficLimit);
