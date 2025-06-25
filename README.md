@@ -54,6 +54,16 @@ npm run test:unit
 | Name | Fallback(default) | Allowed Values | Purpose |
 |------|-------------------|---------------|---------|
 | PORT | 3000 | Any Port Number | Sets the port number for the app |
-| UPLOAD_LIMIT | 1 | Postive Integers | Sets the daily upload limit of an ip in MB |
-| DOWNLOAD_LIMIT | 1 | Postive Integers | Sets the daily download limit of an ip in MB |
+| UPLOAD_LIMIT | 1 | Positive Integers | Sets the daily upload limit of an ip in MB |
+| DOWNLOAD_LIMIT | 1 | Positive Integers | Sets the daily download limit of an ip in MB |
+| DAYS_TO_KEEP | 7 | Positive Integers | Sets after how many days of inactivity the files will be deleted  | 
+| PROVIDER  | local | for now `local` and `google` | Sets which storage provider to use |
+| FOLDER | ./static/ | Absolute or Relative dir | Sets the dir to save assets when using local storage provider |
+| CONFIG | "./api_keys/service_account.json" | Absolute or Relative dir | Sets the service acount key json file for Google Cloud Storage |
+| BUCEKT | node_file_api | Bucket name | Sets the bucket name for google storage provider |
+| REDIS_URL | redis://localhost:6379 | - | Sets the redis database url |
+| NODE_ENV | dev | `dev` or `production` | Sets the app mode |
+
+
+
 

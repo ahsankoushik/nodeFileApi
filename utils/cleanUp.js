@@ -1,5 +1,5 @@
 import { StorageProvider } from "../providers/StorageProviderInterface.js";
-
+import path from "path";
 
 /** 
     * Clean up inactive files after a time period
@@ -20,13 +20,13 @@ export async function cleanUpInactive(days, provider) {
     })
     for (let i = 0; i < inactives.length; i++) {
         const fileData = inactives[i];
-        const filename =  fileData.publicKey + fileData.extention;
+        const filename = fileData.publicKey + path.extname(fileData.originalName);
         try {
             await provider.delete(filename);
         } catch (e) {
             // this will most unlikely case 
             // but if not it should not be issue as this will be deleted
-            // console.error(e);
+            console.error(e);
         }
     }
     try {
