@@ -26,7 +26,7 @@ export async function cleanUpInactive(days, provider) {
         } catch (e) {
             // this will most unlikely case 
             // but if not it should not be issue as this will be deleted
-            console.error(e);
+            // console.error(e);
         }
     }
     try {

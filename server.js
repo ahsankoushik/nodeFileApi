@@ -113,11 +113,11 @@ app.delete("/files/:privateKey", async (req, res) => {
         return res.json({ success: false, message: "Delete failed. File not found." })
     }
     const filename = fileData.publicKey + path.extname(fileData.originalName);
-    const out = await storage.delete(filename);
+    await storage.delete(filename);
     res.json({ success: true, message: "successfully deleted." })
 })
 
-cron.schedule("* * * * *", () => {
+cron.schedule("0 0 * * *", () => {
     cleanUpInactive(DAYS_TO_KEEP, storage);
 })
 

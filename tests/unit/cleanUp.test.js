@@ -2,12 +2,12 @@ import request from "supertest";
 import { app } from "../../server.js";
 import { LocalStorageProvider } from "../../providers/LocalStorageProvider.js";
 import { cleanUpInactive } from "../../utils/cleanUp.js";
-import fs from "fs";
-import { assert, afterAll, beforeAll, expect, test } from "vitest"
-import { FOLDER } from "../../config/env.js";
+import { assert, expect, test } from "vitest"
 import prisma from "../../config/prisma.js";
+
+
+
 // dummy dir for test
-const testDir = FOLDER;
 // beforeAll(async () => {
 //     await fs.mkdir(testDir, { recursive: true });
 // });
@@ -42,15 +42,11 @@ test("Inactive file cleanup.", async () => {
             lastAccess: date
         }
     })
-    await request(app)
-        .post("/files")
-        .attach("file", Buffer.from("hello world"), "hello.txt");
-
     const { count } = await cleanUpInactive(2, storage);
     assert(count === 3, "3 the files should be deleted.");
-    let found = 0;
-    for (let i = 0; i < publicKeys.length; i++) {
 
+
+    for (let i = 0; i < publicKeys.length; i++) {
         const res = await request(app).get(`/files/${publicKeys[i]}`);
         expect(res.statusCode).toBe(404);
         expect(res.body).toHaveProperty("error");

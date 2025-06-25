@@ -5,10 +5,9 @@ export const FOLDER = process.env.FOLDER || "./staic/";
 export const PROVIDER = process.env.PROVIDER || "local";
 export const DAYS_TO_KEEP = parseInt(process.env.DAYS_TO_KEEP || "7");
 
-// TODO :: changed mb to gb change it later to mb
 // upload limit in mb bytes
-export const UPLOAD_LIMIT = parseInt(process.env.UPLOAD_LIMIT || 1) * 1024 * 1024 * 1024;
-export const DOWNLOAD_LIMIT = parseInt(process.env.DOWNLOAD_LIMIT || 1) * 1024 * 1024 *1024;
+export const UPLOAD_LIMIT = parseInt(process.env.UPLOAD_LIMIT || 1) * 1024 * 1024 ;
+export const DOWNLOAD_LIMIT = parseInt(process.env.DOWNLOAD_LIMIT || 1) * 1024 * 1024 ;
 
 // for google cloud provider
 export const CONFIG = process.env.CONFIG || "./api_keys/service_account.json" ;
