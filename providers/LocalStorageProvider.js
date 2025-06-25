@@ -1,10 +1,22 @@
 import { StorageProvider } from "./StorageProviderInterface.js";
-import fs from 'fs/promises';
+import fsp from 'fs/promises';
 import path from 'path';
 import mime from 'mime';
-import prisma from "../config/prisma.js";
+import fs from 'fs'
 
 export class LocalStorageProvider extends StorageProvider {
+    constructor() {
+        super();
+        this.folder = process.env.FOLDER || "./static/"; // folder value must contain an trailing slash /
+
+        // creating file if does not exists
+        if (!fs.existsSync(this.folder)) {
+            fs.mkdirSync(this.folder, { recursive: true })
+        }
+    }
+
+
+
     /** 
         * Upload to storage 
         * @param {Buffer} buff - root dir for storage 
@@ -13,7 +25,7 @@ export class LocalStorageProvider extends StorageProvider {
     async upload(buff, filenameSave) {
         // write to disk and save to db
         const savePath = path.join(this.folder, filenameSave);
-        await fs.writeFile(savePath, buff);
+        await fsp.writeFile(savePath, buff);
     }
 
     /**
@@ -25,7 +37,7 @@ export class LocalStorageProvider extends StorageProvider {
         const filePath = path.join(this.folder, filename);
         // read file and mimetype
         // using buffer so that other cloud provider integration gets easier 
-        const buff = await fs.readFile(filePath);
+        const buff = await fsp.readFile(filePath);
         const mimeType = mime.getType(filePath);
 
         return { buff, mimeType }
@@ -38,9 +50,9 @@ export class LocalStorageProvider extends StorageProvider {
         */
 
     async delete(filename) {
-       // delete file
+        // delete file
         const filePath = path.join(this.folder, filename);
-        await fs.unlink(filePath)
+        await fsp.unlink(filePath)
     }
 
 }

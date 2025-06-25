@@ -3,16 +3,8 @@
 
 
 export class StorageProvider {
-    /** 
-        * StorageProvider Interface for Storage management
-        * @param {string} folder - root dir for storage 
-        */
-    constructor(folder){
-        this.folder = folder;
-    }
 
-
-    async upload(buff, filenameSave ) {
+   async upload(buff, filenameSave ) {
         throw Error("upload not implemented");
     }
 

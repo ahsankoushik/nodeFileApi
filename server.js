@@ -3,7 +3,6 @@ import multer from 'multer'
 import { LocalStorageProvider } from './providers/LocalStorageProvider.js';
 import { traficLimit, DOWNLOAD_LIMIT } from './middlewares/traficLimit.js';
 import { cleanUpInactive } from './utils/cleanUp.js'
-import fs from 'fs'
 import { ulid } from 'ulid';
 import path from 'path';
 import cron from 'node-cron';
@@ -12,19 +11,13 @@ import prisma from "./config/prisma.js";
 
 // geting env port and fallback 
 const PORT = process.env.PORT || 3000;
-const FOLDER = process.env.FOLDER || "./static/"; // FOLDER value must contain an trailing slash /
 const DAYS_TO_KEEP = parseInt(process.env.DAYS_TO_KEEP || "7");
 
 export const app = express(); // web server  // exporting this for integration testing
 const upload = multer(); // for uploading files
 
 
-// creating file if does not exists
-if (!fs.existsSync(FOLDER)) {
-    fs.mkdirSync(FOLDER, { recursive: true })
-}
-
-const storage = new LocalStorageProvider(FOLDER);
+const storage = new LocalStorageProvider();
 
 // middlewares
 app.use("/files", traficLimit);
