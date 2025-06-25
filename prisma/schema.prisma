@@ -12,7 +12,7 @@ datasource db {
 
 model File {
     id Int @id @default(autoincrement())
-    extention String  
+    originalName String  
     created DateTime @default(now())
     lastAccess DateTime @default(now())
     privateKey String @unique

@@ -43,7 +43,7 @@ app.post("/files", upload.single("file"), async (req, res) => {
             await storage.upload(buffer, filenameSave);
             await prisma.file.create({
                 data: {
-                    extention: extname,
+                    originalName: originalname,
                     privateKey,
                     publicKey,
                 }
@@ -79,7 +79,7 @@ app.get("/files/:publicKey", async (req, res) => {
             error: "File not found"
         })
     }
-    const filename = fileData.publicKey + fileData.extention;
+    const filename = fileData.publicKey + path.extname(fileData.originalName);
 
     const { buff, mimeType } = await storage.download(filename);
     // update last access time
@@ -97,6 +97,7 @@ app.get("/files/:publicKey", async (req, res) => {
         return res.status(429).json({ error: "Daily Download limit reached its max." });
     }
     await redis.set(req.__traficKey, JSON.stringify(data));
+    res.setHeader('Content-Disposition', `attachment; filename="${fileData.originalName}"`);
     res.setHeader("Content-Type", mimeType);
     res.send(buff);
 })
@@ -113,13 +114,13 @@ app.delete("/files/:privateKey", async (req, res) => {
     } catch (e) {       // incase of non existing data
         res.json({ success: false, message: "Delete failed. File not found." })
     }
-    const filename = fileData.publicKey + fileData.extention;
+    const filename = fileData.publicKey + path.extname(fileData.originalName);
     const out = await storage.delete(filename);
     res.json({ success: true, message: "successfully deleted." })
 })
 
 cron.schedule("* * * * *", () => {
-    cleanUpInactive(DAYS_TO_KEEP,storage);
+    cleanUpInactive(DAYS_TO_KEEP, storage);
 })
 
 // starting the server
